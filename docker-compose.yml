@@ -1,0 +1,31 @@
+version: '3'
+services:
+  database:
+    image: postgres:13
+    container_name: wiki-js-db
+    environment:
+      POSTGRES_USER: wikijs
+      POSTGRES_PASSWORD: wikijsrocks
+      POSTGRES_DB: wiki
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - wiki-network
+
+  wikijs:
+    image: requarks/wiki:latest
+    container_name: wiki-js
+    depends_on:
+      - database
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config.yml:/wiki/config.yml
+    networks:
+      - wiki-network
+
+volumes:
+  db-data:
+
+networks:
+  wiki-network:
